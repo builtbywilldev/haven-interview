@@ -10,7 +10,7 @@ const monaSans = Mona_Sans({
 
 
 export const metadata: Metadata = {
-  title: "Haven Learn",
+  title: "Haven Prep",
   description: "AI powered mock interview platform",
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${monaSans.className} antialiased`}
+        className={`${monaSans.className} antialiased pattern`}
       >
         {children}
       </body>
