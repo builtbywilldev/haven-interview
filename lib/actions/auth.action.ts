@@ -21,10 +21,10 @@ export async function signUp(params: SignUpParams) {
       name,
       email,
     });
-    return{
-        success: true, 
-        message: 'Account Created - Please Sign in'
-    }
+    return {
+      success: true,
+      message: "Account Created - Please Sign in",
+    };
   } catch (e: any) {
     console.error("Error creating a user", e);
 
@@ -78,4 +78,33 @@ export async function setSessionCookie(idToken: string) {
     path: "/",
     sameSite: "lax",
   });
+}
+
+export async function getCurrentUser(): Promise<User | null> {
+  const cookiestore = await cookies();
+  const sessionCookie = cookiestore.get("session")?.value;
+  if (!sessionCookie) return null;
+
+  try {
+    const decodedCalims = await auth.verifySessionCookie(sessionCookie, true);
+    const userRecord = await db
+      .collection("users")
+      .doc(decodedCalims.uid)
+      .get();
+
+    if (!userRecord.exists) return null;
+    return {
+      ...userRecord.data(),
+      id: userRecord.id,
+    } as User;
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+}
+
+export async function isAuthenticated() {
+    const user = await getCurrentUser()
+
+    return !!user
 }
